@@ -32,12 +32,26 @@
     </style>
     <script type="text/javascript">
         function displayStudentInfo(data) {
-            var student = JSON.parse(data);
+            const student = JSON.parse(data);
             document.getElementById('fullName').innerText = student.fullName;
             document.getElementById('birthday').innerText = student.birthday;
-            document.getElementById('class').innerText = student.classId;
+            document.getElementById('class').innerText = student.grade;
             document.getElementById('gender').innerText = student.gender;
         }
+
+        function getQueryParameter(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        window.onload = function () {
+            const data = getQueryParameter('data');
+            if (data) {
+                displayStudentInfo(decodeURIComponent(data));
+            } else {
+                document.body.innerHTML = '<h1>No data provided!</h1>';
+            }
+        };
     </script>
 </head>
 
