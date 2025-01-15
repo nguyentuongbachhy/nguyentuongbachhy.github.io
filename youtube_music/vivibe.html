@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loading... | Vivibe Music</title>
+
+    <!-- OpenGraph Tags -->
+    <meta property="og:title" content="Loading..." />
+    <meta property="og:description" content="Listen on Vivibe Music" />
+    <meta property="og:image" content="" />
+    <meta property="og:type" content="music.song" />
+
+    <style>
+        :root {
+            --primary-color: #121212;
+            --secondary-color: #282828;
+            --text-primary: #ffffff;
+            --text-secondary: #b3b3b3;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+            background-color: var(--primary-color);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            max-width: 9600px;
+            margin: 0 auto;
+            padding: 20px;
+            flex: 1;
+        }
+
+        .song-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            margin: 40px 0;
+        }
+
+        .thumbnail {
+            width: 480px;
+            height: 296px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            object-fit: cover;
+        }
+
+        .title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            padding: 0 20px;
+        }
+
+        .artist {
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+
+        .player {
+            background-color: var(--secondary-color);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .control-button {
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            transition: background-color 0.2s;
+        }
+
+        .control-button:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .control-button.disabled {
+            color: var(--text-secondary);
+            cursor: not-allowed;
+        }
+
+        .play-button {
+            width: 56px;
+            height: 56px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s;
+        }
+
+        .play-button:hover {
+            transform: scale(1.05);
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .play-button svg {
+            fill: var(--text-primary);
+        }
+
+        .progress {
+            width: 100%;
+            height: 4px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .progress-bar {
+            width: 0;
+            height: 100%;
+            background-color: var(--text-primary);
+            border-radius: 2px;
+            position: relative;
+            transition: width 0.1s linear;
+        }
+
+        .time {
+            display: flex;
+            justify-content: space-between;
+            color: var(--text-secondary);
+            font-size: 12px;
+            margin-top: 8px;
+        }
+
+        .download-app {
+            text-align: center;
+            padding: 20px;
+            background-color: var(--secondary-color);
+            border-radius: 8px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .download-button {
+            display: inline-block;
+            background-color: var(--text-primary);
+            color: var(--primary-color);
+            padding: 12px 24px;
+            border-radius: 24px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 12px;
+            transition: transform 0.2s;
+        }
+
+        .download-button:hover {
+            transform: scale(1.05);
+        }
+
+        @media (max-width: 600px) {
+            .thumbnail {
+                width: 320px;
+                height: 197px;
+            }
+
+            .title {
+                font-size: 20px;
+            }
+
+            .player,
+            .download-app {
+                margin-left: 20px;
+                margin-right: 20px;
+            }
+        }
+
+        .error-message {
+            text-align: center;
+            color: #ff4444;
+            margin: 20px;
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="song-info">
+            <img src="" alt="" class="thumbnail">
+            <h1 class="title">Loading...</h1>
+            <p class="artist"></p>
+            <p class="views"></p>
+        </div>
+
+        <audio id="audioPlayer"></audio>
+
+        <div class="player">
+            <div class="controls">
+                <button class="control-button" id="prevButton">
+                    <svg width="24" height="24" viewBox="0 0 24 24">
+                        <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z" fill="currentColor" />
+                    </svg>
+                </button>
+
+                <button class="control-button play-button" id="playButton">
+                    <svg width="24" height="24" viewBox="0 0 24 24">
+                        <path d="M8 5v14l11-7z" fill="currentColor" />
+                    </svg>
+                </button>
+
+                <button class="control-button disabled" id="nextButton">
+                    <svg width="24" height="24" viewBox="0 0 24 24">
+                        <path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z" fill="currentColor" />
+                    </svg>
+                </button>
+            </div>
+
+            <div class="progress" id="progressContainer">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+            <div class="time">
+                <span id="currentTime">0:00</span>
+                <span id="duration">0:00</span>
+            </div>
+        </div>
+
+        <div class="download-app">
+            <p>Get the full experience with the Vivibe Music app</p>
+            <a href="https://play.google.com/store/apps/details?id=com.example.vivibe" class="download-button">
+                Download App
+            </a>
+        </div>
+
+        <p class="error-message" id="errorMessage">
+            Sorry, there was an error loading this song. Please try again later.
+        </p>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <script>
+        // Decryption configuration
+        const SECRET_KEY = 'YourSecretKey123';
+        const SECRET_IV = 'YourInitVector16';
+
+        function decrypt(encryptedBase64) {
+            try {
+                // Decode Base64URL
+                const encrypted = atob(encryptedBase64.replace(/-/g, '+').replace(/_/g, '/'));
+
+                // Convert to bytes
+                const encryptedBytes = new Uint8Array(encrypted.length);
+                for (let i = 0; i < encrypted.length; i++) {
+                    encryptedBytes[i] = encrypted.charCodeAt(i);
+                }
+
+                // Decrypt
+                const key = CryptoJS.enc.Utf8.parse(SECRET_KEY);
+                const iv = CryptoJS.enc.Utf8.parse(SECRET_IV);
+
+                const decrypted = CryptoJS.AES.decrypt(
+                    { ciphertext: CryptoJS.lib.WordArray.create(encryptedBytes) },
+                    key,
+                    {
+                        iv: iv,
+                        mode: CryptoJS.mode.CBC,
+                        padding: CryptoJS.pad.Pkcs7
+                    }
+                );
+
+                return decrypted.toString(CryptoJS.enc.Utf8);
+            } catch (e) {
+                console.error('Decryption error:', e);
+                return null;
+            }
+        }
+
+        function getUrlParams() {
+            const searchParams = new URLSearchParams(window.location.search);
+            const encryptedData = searchParams.get('d');
+            if (!encryptedData) return null;
+
+            try {
+                const decryptedData = decrypt(encryptedData);
+                return JSON.parse(decryptedData);
+            } catch (e) {
+                console.error('Error parsing URL parameters:', e);
+                return null;
+            }
+        }
+
+        function formatNumber(number) {
+            if (number < 1000) return number.toString();
+            if (number < 1000000) return `${(number / 1000).toFixed(1)}K`;
+            return `${(number / 1000000).toFixed(1)}M`;
+        }
+
+        function formatTime(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = Math.floor(seconds % 60);
+            return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+        }
+
+        function setupAudioPlayer(audioUrl) {
+            const audioPlayer = document.getElementById('audioPlayer');
+            const playButton = document.getElementById('playButton');
+            const prevButton = document.getElementById('prevButton');
+            const progressBar = document.getElementById('progressBar');
+            const progressContainer = document.getElementById('progressContainer');
+            const currentTimeEl = document.getElementById('currentTime');
+            const durationEl = document.getElementById('duration');
+            const playButtonSvg = playButton.querySelector('svg');
+
+            audioPlayer.src = audioUrl;
+
+            audioPlayer.addEventListener('loadedmetadata', () => {
+                durationEl.textContent = formatTime(audioPlayer.duration);
+            });
+
+            audioPlayer.addEventListener('timeupdate', () => {
+                const progress = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+                progressBar.style.width = `${progress}%`;
+                currentTimeEl.textContent = formatTime(audioPlayer.currentTime);
+            });
+
+            audioPlayer.addEventListener('ended', () => {
+                playButtonSvg.innerHTML = '<path d="M8 5v14l11-7z" fill="currentColor"/>';
+            });
+
+            playButton.addEventListener('click', () => {
+                if (audioPlayer.paused) {
+                    audioPlayer.play();
+                    playButtonSvg.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" fill="currentColor"/>';
+                } else {
+                    audioPlayer.pause();
+                    playButtonSvg.innerHTML = '<path d="M8 5v14l11-7z" fill="currentColor"/>';
+                }
+            });
+
+            prevButton.addEventListener('click', () => {
+                audioPlayer.currentTime = 0;
+            });
+
+            progressContainer.addEventListener('click', (e) => {
+                const rect = progressContainer.getBoundingClientRect();
+                const pos = (e.clientX - rect.left) / rect.width;
+                audioPlayer.currentTime = pos * audioPlayer.duration;
+            });
+        }
+
+        function updateUI(data) {
+            // Update metadata
+            document.title = `${data.title} - ${data.artist} | Vivibe Music`;
+            document.querySelector('meta[property="og:title"]').setAttribute('content', `${data.title} - ${data.artist}`);
+            document.querySelector('meta[property="og:description"]').setAttribute('content', `Listen to ${data.title} by ${data.artist} on Vivibe Music`);
+            document.querySelector('meta[property="og:image"]').setAttribute('content', data.thumbnailUrl);
+
+            // Update UI elements
+            document.querySelector('.thumbnail').src = data.thumbnailUrl;
+            document.querySelector('.thumbnail').alt = data.title;
+            document.querySelector('.title').textContent = data.title;
+            document.querySelector('.artist').textContent = data.artist;
+            document.querySelector('.views').textContent = `${formatNumber(data.views)} views`;
+
+            // Setup audio player
+            if (data.audioUrl) {
+                setupAudioPlayer(data.audioUrl);
+            }
+        }
+
+        function showError() {
+            document.getElementById('errorMessage').style.display = 'block';
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', () => {
+            try {
+                const params = getUrlParams();
+                if (params) {
+                    updateUI(params);
+                } else {
+                    showError();
+                }
+            } catch (e) {
+                console.error('Error initializing page:', e);
+                showError();
+            }
+        });
+    </script>
+</body>
+
+</html>
