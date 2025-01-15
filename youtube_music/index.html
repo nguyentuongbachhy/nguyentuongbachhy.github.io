@@ -51,8 +51,8 @@
         }
 
         .thumbnail {
-            width: 480px;
-            height: 296px;
+            width: 400px;
+            height: 250px;
             border-radius: 8px;
             margin-bottom: 20px;
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
@@ -60,9 +60,10 @@
         }
 
         .title {
-            font-size: 24px;
+            font-size: 32px;
             font-weight: bold;
             margin-bottom: 8px;
+            margin-top: 8px;
             padding: 0 20px;
         }
 
@@ -297,6 +298,13 @@
             }
         }
 
+        function checkExpiry(data) {
+            const now = Date.now();
+            if (now > data.expiryTime) {
+                throw new Error('Link has expired');
+            }
+        }
+
         function getUrlParams() {
             const searchParams = new URLSearchParams(window.location.search);
             const encryptedData = searchParams.get('d');
@@ -371,6 +379,7 @@
         }
 
         function updateUI(data) {
+            checkExpiry(data);
             // Update metadata
             document.title = `${data.title} - ${data.artist} | Vivibe Music`;
             document.querySelector('meta[property="og:title"]').setAttribute('content', `${data.title} - ${data.artist}`);
