@@ -1,0 +1,17 @@
+https://get.foundation/
+
+https://pure-css.github.io/
+
+https://tailwindcss.com/ (*)
+
+https://getuikit.com/
+
+https://andybrewer.github.io/mvp/
+
+https://getbootstrap.com/
+
+https://www.amazon.com/Bootstrap-Foundations-Mr-Daniel-Foreman/dp/B0948GRS8W/
+
+https://www.amazon.com/Responsive-Web-Design-HTML5-CSS/dp/1839211563/
+
+https://themes.getbootstrap.com/

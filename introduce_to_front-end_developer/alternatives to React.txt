@@ -1,0 +1,17 @@
+https://lodash.com/
+
+https://moment.github.io/luxon/#/
+
+https://redux.js.org/
+
+https://axios-http.com/
+
+https://jestjs.io/
+
+https://reactjs.org/
+
+https://docs.microsoft.com/en-us/dotnet/architecture/modern-web-apps-azure/choose-between-traditional-web-and-single-page-apps
+
+https://github.com/facebook/react
+
+https://youtu.be/XxVg_s8xAms
